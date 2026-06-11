@@ -2,62 +2,52 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>مولد حسابات تجريبية</title>
+    <title>مولد حسابات إسبانية</title>
     <style>
-        body { font-family: sans-serif; padding: 20px; line-height: 1.6; display: flex; justify-content: center; background-color: #f9f9f9; }
-        .container { width: 100%; max-width: 500px; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        h2 { text-align: center; color: #333; }
-        label { font-weight: bold; margin-top: 10px; display: block; }
-        input, select, button { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
-        button { background-color: #007bff; color: white; border: none; cursor: pointer; font-size: 16px; font-weight: bold; }
-        button:hover { background-color: #0056b3; }
-        #downloadBtn { background-color: #28a745; display: none; margin-top: 10px; }
-        #output { background: #333; color: #fff; padding: 15px; border-radius: 6px; white-space: pre-wrap; margin-top: 20px; font-family: monospace; max-height: 300px; overflow-y: auto; }
+        body { font-family: sans-serif; padding: 20px; background-color: #f4f4f9; display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 500px; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        input, select, button { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; }
+        button { background-color: #d9534f; color: white; border: none; cursor: pointer; }
+        #downloadBtn { background-color: #5cb85c; display: none; }
+        #output { background: #222; color: #0f0; padding: 15px; border-radius: 5px; white-space: pre-wrap; font-family: monospace; height: 200px; overflow-y: auto; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>مولد الحسابات التجريبية</h2>
+    <h2>مولد الحسابات (أسماء إسبانية)</h2>
     <label>عدد الحسابات:</label>
-    <input type="number" id="count" value="5" min="1" max="50">
-    
-    <label>نوع البريد:</label>
-    <select id="emailType">
-        <option value="outlook">Outlook</option>
-        <option value="hotmail">Hotmail</option>
-        <option value="both">كلاهما</option>
-    </select>
+    <input type="number" id="count" value="5">
     
     <button onclick="generate()">توليد الحسابات</button>
-    <button id="downloadBtn" onclick="downloadFile()">تحميل الملف (TXT)</button>
+    <button id="downloadBtn" onclick="downloadFile()">تحميل الملف</button>
     
-    <div id="output">سيظهر الناتج هنا...</div>
+    <div id="output"></div>
 </div>
 
 <script>
 let generatedData = "";
+const spanishNames = ["juan", "maria", "pedro", "sofia", "carlos", "lucia", "diego", "ana", "javier", "elena", "miguel", "carmen"];
 
 function generate() {
     const count = document.getElementById('count').value;
-    const emailType = document.getElementById('emailType').value;
     const output = document.getElementById('output');
     const downloadBtn = document.getElementById('downloadBtn');
-    const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
     
     generatedData = "";
 
     for (let i = 0; i < count; i++) {
-        let username = "";
-        for (let j = 0; j < 7; j++) username += chars.charAt(Math.floor(Math.random() * chars.length));
+        // اختيار اسم إسباني عشوائي مع أرقام
+        const name = spanishNames[Math.floor(Math.random() * spanishNames.length)];
+        const number = Math.floor(Math.random() * 9999);
+        const username = `${name}${number}`;
+        const domain = Math.random() > 0.5 ? 'outlook.com' : 'hotmail.com';
+        const email = `${username}@${domain}`;
         
-        let password = "";
-        for (let j = 0; j < 10; j++) password += chars.charAt(Math.floor(Math.random() * chars.length));
+        // الباسورد نفس اسم البريد
+        const password = email;
         
-        let domain = emailType === 'both' ? (Math.random() > 0.5 ? 'outlook.com' : 'hotmail.com') : emailType + '.com';
-        
-        // النمط المطلوب email:password
-        generatedData += `${username}@${domain}:${password}\n`;
+        generatedData += `${email}:${password}\n`;
     }
     
     output.innerText = generatedData;
@@ -69,9 +59,8 @@ function downloadFile() {
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'accounts.txt';
+    a.download = 'spanish_accounts.txt';
     a.click();
-    window.URL.revokeObjectURL(url);
 }
 </script>
 
