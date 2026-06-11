@@ -4,10 +4,15 @@
     <meta charset="UTF-8">
     <title>مولد حسابات تجريبية</title>
     <style>
-        body { font-family: sans-serif; padding: 20px; line-height: 1.6; }
-        .container { max-width: 500px; margin: auto; border: 1px solid #ccc; padding: 20px; border-radius: 8px; }
-        input, select, button { display: block; width: 100%; margin: 10px 0; padding: 8px; }
-        #output { background: #f4f4f4; padding: 10px; white-space: pre-wrap; margin-top: 20px; border: 1px dashed #999; }
+        body { font-family: sans-serif; padding: 20px; line-height: 1.6; display: flex; justify-content: center; background-color: #f9f9f9; }
+        .container { width: 100%; max-width: 500px; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        h2 { text-align: center; color: #333; }
+        label { font-weight: bold; margin-top: 10px; display: block; }
+        input, select, button { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
+        button { background-color: #007bff; color: white; border: none; cursor: pointer; font-size: 16px; font-weight: bold; }
+        button:hover { background-color: #0056b3; }
+        #downloadBtn { background-color: #28a745; display: none; margin-top: 10px; }
+        #output { background: #333; color: #fff; padding: 15px; border-radius: 6px; white-space: pre-wrap; margin-top: 20px; font-family: monospace; max-height: 300px; overflow-y: auto; }
     </style>
 </head>
 <body>
@@ -25,17 +30,22 @@
     </select>
     
     <button onclick="generate()">توليد الحسابات</button>
+    <button id="downloadBtn" onclick="downloadFile()">تحميل الملف (TXT)</button>
     
-    <div id="output"></div>
+    <div id="output">سيظهر الناتج هنا...</div>
 </div>
 
 <script>
+let generatedData = "";
+
 function generate() {
     const count = document.getElementById('count').value;
     const emailType = document.getElementById('emailType').value;
     const output = document.getElementById('output');
+    const downloadBtn = document.getElementById('downloadBtn');
     const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
-    let results = "";
+    
+    generatedData = "";
 
     for (let i = 0; i < count; i++) {
         let username = "";
@@ -45,9 +55,23 @@ function generate() {
         for (let j = 0; j < 10; j++) password += chars.charAt(Math.floor(Math.random() * chars.length));
         
         let domain = emailType === 'both' ? (Math.random() > 0.5 ? 'outlook.com' : 'hotmail.com') : emailType + '.com';
-        results += `${username}@${domain} | كلمة السر: ${password}\n`;
+        
+        // النمط المطلوب email:password
+        generatedData += `${username}@${domain}:${password}\n`;
     }
-    output.innerText = results;
+    
+    output.innerText = generatedData;
+    downloadBtn.style.display = "block";
+}
+
+function downloadFile() {
+    const blob = new Blob([generatedData], { type: 'text/plain' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'accounts.txt';
+    a.click();
+    window.URL.revokeObjectURL(url);
 }
 </script>
 
