@@ -2,27 +2,35 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>مولد حسابات إسبانية</title>
+    <title>مولد حسابات إسبانية - عبد الله علي</title>
     <style>
         body { font-family: sans-serif; padding: 20px; background-color: #f4f4f9; display: flex; justify-content: center; }
         .container { width: 100%; max-width: 500px; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        input, select, button { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; }
-        button { background-color: #d9534f; color: white; border: none; cursor: pointer; }
+        h2 { text-align: center; color: #333; }
+        label { font-weight: bold; display: block; margin-top: 10px; }
+        input, button { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
+        button { background-color: #d9534f; color: white; border: none; cursor: pointer; font-weight: bold; }
+        button:hover { background-color: #c9302c; }
         #downloadBtn { background-color: #5cb85c; display: none; }
-        #output { background: #222; color: #0f0; padding: 15px; border-radius: 5px; white-space: pre-wrap; font-family: monospace; height: 200px; overflow-y: auto; }
+        #output { background: #222; color: #0f0; padding: 15px; border-radius: 5px; white-space: pre-wrap; font-family: monospace; height: 200px; overflow-y: auto; margin-top: 10px; }
+        .footer { text-align: center; margin-top: 20px; font-size: 14px; color: #666; border-top: 1px solid #eee; padding-top: 10px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>مولد الحسابات (أسماء إسبانية)</h2>
+    <h2>مولد الحسابات</h2>
     <label>عدد الحسابات:</label>
     <input type="number" id="count" value="5">
     
     <button onclick="generate()">توليد الحسابات</button>
-    <button id="downloadBtn" onclick="downloadFile()">تحميل الملف</button>
+    <button id="downloadBtn" onclick="downloadFile()">تحميل الملف (TXT)</button>
     
-    <div id="output"></div>
+    <div id="output">سيظهر الناتج هنا...</div>
+    
+    <div class="footer">
+        تم إعداده بواسطة عبد الله علي
+    </div>
 </div>
 
 <script>
@@ -37,15 +45,16 @@ function generate() {
     generatedData = "";
 
     for (let i = 0; i < count; i++) {
-        // اختيار اسم إسباني عشوائي مع أرقام
         const name = spanishNames[Math.floor(Math.random() * spanishNames.length)];
         const number = Math.floor(Math.random() * 9999);
+        
+        // اسم المستخدم
         const username = `${name}${number}`;
         const domain = Math.random() > 0.5 ? 'outlook.com' : 'hotmail.com';
         const email = `${username}@${domain}`;
         
-        // الباسورد نفس اسم البريد
-        const password = email;
+        // الباسورد هو اسم المستخدم فقط
+        const password = username;
         
         generatedData += `${email}:${password}\n`;
     }
@@ -61,6 +70,7 @@ function downloadFile() {
     a.href = url;
     a.download = 'spanish_accounts.txt';
     a.click();
+    window.URL.revokeObjectURL(url);
 }
 </script>
 
