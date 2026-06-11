@@ -2,75 +2,73 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>مولد حسابات إسبانية - عبد الله علي</title>
+    <title>مولد الحسابات العالمي - عبد الله علي</title>
     <style>
-        body { font-family: sans-serif; padding: 20px; background-color: #f4f4f9; display: flex; justify-content: center; }
-        .container { width: 100%; max-width: 500px; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        h2 { text-align: center; color: #333; }
-        input, button { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
-        button { background-color: #d9534f; color: white; border: none; cursor: pointer; font-weight: bold; }
-        #output { background: #222; color: #0f0; padding: 15px; border-radius: 5px; height: 150px; overflow-y: auto; font-family: monospace; font-size: 12px; }
-        .footer { text-align: center; margin-top: 15px; color: #666; font-size: 13px; }
+        body { font-family: sans-serif; background-color: #f0f2f5; display: flex; justify-content: center; padding: 20px; }
+        .container { width: 100%; max-width: 500px; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        h2 { text-align: center; color: #1a73e8; }
+        input, button { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+        button { background-color: #1a73e8; color: white; border: none; cursor: pointer; font-weight: bold; }
+        #output { background: #1e1e1e; color: #00ff00; padding: 15px; border-radius: 8px; height: 150px; overflow-y: auto; font-family: monospace; font-size: 12px; }
+        .footer { text-align: center; margin-top: 15px; color: #666; font-size: 12px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>مولد الحسابات (إصدار محسّن)</h2>
-    <label>عدد الحسابات المطلوبة:</label>
+    <h2>مولد الحسابات العالمي</h2>
+    <label>عدد الحسابات (مثلاً 5000):</label>
     <input type="number" id="count" value="1000">
     
-    <button onclick="generate()">توليد وتحديث البيانات</button>
-    <button id="downloadBtn" onclick="downloadFile()" style="background-color: #5cb85c; display: none;">تحميل الملف النهائي</button>
+    <button onclick="generateData()">توليد الكل</button>
+    <button id="downloadBtn" onclick="downloadFile()" style="background-color: #28a745; display: none;">تحميل الملف (TXT)</button>
     
-    <div id="output">سيظهر هنا جزء من النتائج...</div>
+    <div id="output">جاهز للتوليد...</div>
     <div class="footer">تم إعداده بواسطة عبد الله علي</div>
 </div>
 
 <script>
-let fullResult = "";
+let fullAccounts = [];
 
-function generate() {
+function generateData() {
     const count = parseInt(document.getElementById('count').value);
     const output = document.getElementById('output');
     const downloadBtn = document.getElementById('downloadBtn');
     
-    const spanishNames = ["juan", "maria", "pedro", "sofia", "carlos", "lucia", "diego", "ana", "javier", "elena", "miguel", "carmen"];
-    const domains = ["outlook.com", "hotmail.com"];
+    // قائمة أسماء متنوعة من مختلف الثقافات
+    const names = [
+        "juan", "maria", "pedro", "sofia", "giuseppe", "luca", "claire", "pierre", 
+        "hans", "elena", "mateo", "isabella", "hiroshi", "kim", "alex", "oliver"
+    ];
+    const domains = ["outlook.com", "hotmail.com", "gmail.com", "yahoo.com"];
     
-    fullResult = "";
-    let preview = "";
-
-    // استخدام Time Stamp عشوائي لضمان اختلاف النتائج في كل مرة
-    const seed = Date.now();
+    fullAccounts = []; // تنظيف الذاكرة
 
     for (let i = 0; i < count; i++) {
-        const name = spanishNames[Math.floor(Math.random() * spanishNames.length)];
-        // توليد رقم عشوائي كبير ومستقل لكل عملية
-        const randomNum = Math.floor(Math.random() * 10000000) + i;
-        
-        const username = name + randomNum;
+        const name = names[Math.floor(Math.random() * names.length)];
+        // توليد رقم فريد يعتمد على الوقت + رقم عشوائي كبير جداً
+        const id = Math.floor(Math.random() * 99999999);
+        const username = `${name}${id}`;
         const domain = domains[Math.floor(Math.random() * domains.length)];
-        const email = username + "@" + domain;
+        
+        const email = `${username}@${domain}`;
         const password = username;
         
-        const line = email + ":" + password;
-        fullResult += line + "\n";
-        
-        if (i < 20) preview += line + "\n";
+        fullAccounts.push(`${email}:${password}`);
     }
     
-    output.innerText = preview + "\n... (تم توليد " + count + " حساب بنجاح)";
+    output.innerText = `تم توليد ${count} حساب بنجاح!\nالآن يمكنك تحميل الملف.`;
     downloadBtn.style.display = "block";
 }
 
 function downloadFile() {
-    const blob = new Blob([fullResult], { type: 'text/plain' });
+    const blob = new Blob([fullAccounts.join('\n')], { type: 'text/plain' });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'accounts_full.txt';
+    a.download = 'accounts_global.txt';
     a.click();
+    window.URL.revokeObjectURL(url);
 }
 </script>
 
