@@ -7,74 +7,70 @@
         body { font-family: sans-serif; padding: 20px; background-color: #f4f4f9; display: flex; justify-content: center; }
         .container { width: 100%; max-width: 500px; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         h2 { text-align: center; color: #333; }
-        label { font-weight: bold; display: block; margin-top: 10px; }
         input, button { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
         button { background-color: #d9534f; color: white; border: none; cursor: pointer; font-weight: bold; }
-        button:hover { background-color: #c9302c; }
-        #downloadBtn { background-color: #5cb85c; display: none; }
-        #output { background: #222; color: #0f0; padding: 15px; border-radius: 5px; white-space: pre-wrap; font-family: monospace; height: 200px; overflow-y: auto; margin-top: 10px; font-size: 12px; }
-        .footer { text-align: center; margin-top: 20px; font-size: 14px; color: #666; border-top: 1px solid #eee; padding-top: 10px; }
+        #output { background: #222; color: #0f0; padding: 15px; border-radius: 5px; height: 150px; overflow-y: auto; font-family: monospace; font-size: 12px; }
+        .footer { text-align: center; margin-top: 15px; color: #666; font-size: 13px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>مولد الحسابات (عدد كبير)</h2>
-    <label>عدد الحسابات (مثلاً 1000):</label>
+    <h2>مولد الحسابات (إصدار محسّن)</h2>
+    <label>عدد الحسابات المطلوبة:</label>
     <input type="number" id="count" value="1000">
     
-    <button onclick="generate()">توليد الحسابات</button>
-    <button id="downloadBtn" onclick="downloadFile()">تحميل الملف (TXT)</button>
+    <button onclick="generate()">توليد وتحديث البيانات</button>
+    <button id="downloadBtn" onclick="downloadFile()" style="background-color: #5cb85c; display: none;">تحميل الملف النهائي</button>
     
-    <div id="output">سيظهر الناتج هنا...</div>
-    
-    <div class="footer">
-        تم إعداده بواسطة عبد الله علي
-    </div>
+    <div id="output">سيظهر هنا جزء من النتائج...</div>
+    <div class="footer">تم إعداده بواسطة عبد الله علي</div>
 </div>
 
 <script>
-let generatedData = "";
-const spanishNames = ["juan", "maria", "pedro", "sofia", "carlos", "lucia", "diego", "ana", "javier", "elena", "miguel", "carmen", "alejandro", "valeria"];
+let fullResult = "";
 
 function generate() {
     const count = parseInt(document.getElementById('count').value);
     const output = document.getElementById('output');
     const downloadBtn = document.getElementById('downloadBtn');
     
-    generatedData = "";
-    let dataDisplay = ""; // لعرض جزء من النتائج فقط لتسريع المتصفح
+    const spanishNames = ["juan", "maria", "pedro", "sofia", "carlos", "lucia", "diego", "ana", "javier", "elena", "miguel", "carmen"];
+    const domains = ["outlook.com", "hotmail.com"];
+    
+    fullResult = "";
+    let preview = "";
+
+    // استخدام Time Stamp عشوائي لضمان اختلاف النتائج في كل مرة
+    const seed = Date.now();
 
     for (let i = 0; i < count; i++) {
         const name = spanishNames[Math.floor(Math.random() * spanishNames.length)];
-        // أرقام عشوائية كبيرة لضمان عدم التكرار
-        const number = Math.floor(Math.random() * 9999999); 
+        // توليد رقم عشوائي كبير ومستقل لكل عملية
+        const randomNum = Math.floor(Math.random() * 10000000) + i;
         
-        const username = `${name}${number}`;
-        const domain = Math.random() > 0.5 ? 'outlook.com' : 'hotmail.com';
-        const email = `${username}@${domain}`;
+        const username = name + randomNum;
+        const domain = domains[Math.floor(Math.random() * domains.length)];
+        const email = username + "@" + domain;
         const password = username;
         
-        generatedData += `${email}:${password}\n`;
+        const line = email + ":" + password;
+        fullResult += line + "\n";
         
-        // عرض أول 50 حساب فقط في الصفحة لتجنب بطء المتصفح
-        if (i < 50) {
-            dataDisplay += `${email}:${password}\n`;
-        }
+        if (i < 20) preview += line + "\n";
     }
     
-    output.innerText = dataDisplay + (count > 50 ? "\n... (تم توليد " + count + " حساب، اضغط تحميل للحصول عليها كاملة)" : "");
+    output.innerText = preview + "\n... (تم توليد " + count + " حساب بنجاح)";
     downloadBtn.style.display = "block";
 }
 
 function downloadFile() {
-    const blob = new Blob([generatedData], { type: 'text/plain' });
+    const blob = new Blob([fullResult], { type: 'text/plain' });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'spanish_accounts_1000.txt';
+    a.download = 'accounts_full.txt';
     a.click();
-    window.URL.revokeObjectURL(url);
 }
 </script>
 
