@@ -12,16 +12,16 @@
         button { background-color: #d9534f; color: white; border: none; cursor: pointer; font-weight: bold; }
         button:hover { background-color: #c9302c; }
         #downloadBtn { background-color: #5cb85c; display: none; }
-        #output { background: #222; color: #0f0; padding: 15px; border-radius: 5px; white-space: pre-wrap; font-family: monospace; height: 200px; overflow-y: auto; margin-top: 10px; }
+        #output { background: #222; color: #0f0; padding: 15px; border-radius: 5px; white-space: pre-wrap; font-family: monospace; height: 200px; overflow-y: auto; margin-top: 10px; font-size: 12px; }
         .footer { text-align: center; margin-top: 20px; font-size: 14px; color: #666; border-top: 1px solid #eee; padding-top: 10px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>مولد الحسابات</h2>
-    <label>عدد الحسابات:</label>
-    <input type="number" id="count" value="5">
+    <h2>مولد الحسابات (عدد كبير)</h2>
+    <label>عدد الحسابات (مثلاً 1000):</label>
+    <input type="number" id="count" value="1000">
     
     <button onclick="generate()">توليد الحسابات</button>
     <button id="downloadBtn" onclick="downloadFile()">تحميل الملف (TXT)</button>
@@ -35,31 +35,35 @@
 
 <script>
 let generatedData = "";
-const spanishNames = ["juan", "maria", "pedro", "sofia", "carlos", "lucia", "diego", "ana", "javier", "elena", "miguel", "carmen"];
+const spanishNames = ["juan", "maria", "pedro", "sofia", "carlos", "lucia", "diego", "ana", "javier", "elena", "miguel", "carmen", "alejandro", "valeria"];
 
 function generate() {
-    const count = document.getElementById('count').value;
+    const count = parseInt(document.getElementById('count').value);
     const output = document.getElementById('output');
     const downloadBtn = document.getElementById('downloadBtn');
     
     generatedData = "";
+    let dataDisplay = ""; // لعرض جزء من النتائج فقط لتسريع المتصفح
 
     for (let i = 0; i < count; i++) {
         const name = spanishNames[Math.floor(Math.random() * spanishNames.length)];
-        const number = Math.floor(Math.random() * 9999);
+        // أرقام عشوائية كبيرة لضمان عدم التكرار
+        const number = Math.floor(Math.random() * 9999999); 
         
-        // اسم المستخدم
         const username = `${name}${number}`;
         const domain = Math.random() > 0.5 ? 'outlook.com' : 'hotmail.com';
         const email = `${username}@${domain}`;
-        
-        // الباسورد هو اسم المستخدم فقط
         const password = username;
         
         generatedData += `${email}:${password}\n`;
+        
+        // عرض أول 50 حساب فقط في الصفحة لتجنب بطء المتصفح
+        if (i < 50) {
+            dataDisplay += `${email}:${password}\n`;
+        }
     }
     
-    output.innerText = generatedData;
+    output.innerText = dataDisplay + (count > 50 ? "\n... (تم توليد " + count + " حساب، اضغط تحميل للحصول عليها كاملة)" : "");
     downloadBtn.style.display = "block";
 }
 
@@ -68,7 +72,7 @@ function downloadFile() {
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'spanish_accounts.txt';
+    a.download = 'spanish_accounts_1000.txt';
     a.click();
     window.URL.revokeObjectURL(url);
 }
